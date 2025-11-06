@@ -1,0 +1,110 @@
+/* Variables CSS Globales */
+:root {
+    --primary-gradient: linear-gradient(90deg, #c5c9c8 0%, #b0abab 100%);
+    --reverse-gradient: linear-gradient(90deg, #20cbea 0%, #43c6ac 100%);
+    --body-gradient: linear-gradient(120deg, #f6f7f9 0%, #757575 100%);
+    --primary-color: #25a0a0;
+    --secondary-color: #3a6073;
+    --shadow-color: rgba(165, 166, 167, 0.12);
+    --container-bg: rgba(58, 58, 58, 0.95);
+    --radius-lg: 18px;
+    --radius-md: 16px;
+    --spacing-lg: 40px;
+    --spacing-md: 32px;
+    --spacing-sm: 24px;
+    --font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+}
+
+/* Estilos Base */
+body {
+    background: var(--body-gradient);
+    font-family: var(--font-family);
+    color: #fff;
+}
+
+/* Contenedor gris reutilizable */
+.container-gray {
+    background: var(--container-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 32px var(--shadow-color);
+    padding: var(--spacing-lg) var(--spacing-md);
+    margin: var(--spacing-lg) 0;
+}
+
+/* Header */
+header {
+    background: var(--primary-gradient);
+    color: var(--primary-color);
+}
+
+/* Sidebar */
+aside {
+    background: var(--container-bg);
+    min-height: 100vh;
+    border-radius: var(--radius-md);
+}
+
+aside .nav-link {
+    color: #fff;
+    padding: 10px;
+    border-radius: var(--radius-md);
+    transition: background 0.3s;
+}
+
+aside .nav-link:hover {
+    background: var(--reverse-gradient);
+    color: #fff;
+}
+
+/* Main */
+main {
+    background: var(--container-bg);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-md);
+    color: #fff;
+}
+
+/* Botones */
+.btn-primary {
+    background: var(--primary-gradient);
+    color: var(--primary-color);
+    border: none;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(67,198,172,0.10);
+}
+
+.btn-primary:hover {
+    background: var(--reverse-gradient);
+    color: #fff;
+}
+
+.btn-outline-light {
+    border: 1px solid #fff;
+    color: #fff;
+}
+
+.btn-outline-light:hover {
+    background: #fff;
+    color: var(--secondary-color);
+}
+/* Estilo para cada tarjeta de producto */
+.card.h-100 {
+background-color: var(--container-bg);
+border: none;
+box-shadow: 0 4px 15px var(--shadow-color);
+transition: transform 0.3s ease-in-out;
+}
+
+.card.h-100:hover {
+transform: translateY(-5px);
+}
+
+.card-body {
+padding: 1rem;
+}
+
+.card-img-top {
+object-fit: cover;
+height: 200px;
+}
