@@ -1,30 +1,36 @@
 // src/pages/LoginPage.tsx
 import { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export const LoginPage = () => {
-  // 1. Creamos un estado para cada input del formulario
 const [correo, setCorreo] = useState('');
 const [password, setPassword] = useState('');
-  // 2. Esta función se llama cuando el usuario envía el formulario
-const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Evita que la página se recargue
-    // 3. Replicamos la lógica de tu scripts.js
-    // (Por ahora, solo simulamos. No guardamos en LocalStorage aún)
-    console.log('Intentando iniciar sesión con:', { correo, password });
+const [validated, setValidated] = useState(false);
+const { login } = useAuth();
+const navigate = useNavigate();
 
-    if (correo === 'admin@duoc.cl' && password === 'admin') {
-    alert('Login exitoso (simulado)');
-      // Aquí, en el futuro, redirigiríamos al usuario
-    } else {
-    alert('Correo o contraseña incorrectos (simulado)');
+const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+const form = event.currentTarget;
+
+event.preventDefault();
+event.stopPropagation();
+
+if (form.checkValidity() === false) {
+    setValidated(true); // Mostramos errores
+    return;
     }
+
+    setValidated(true);
+const success = login(correo, password);
+if (success) {
+navigate('/');}
 };
 return (
     <div className="container-gray p-4" style={{ maxWidth: '500px', margin: 'auto' }}>
     <h1 className="mb-4">Iniciar Sesión</h1>
-    <Form onSubmit={handleSubmit}>
+    <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="login-correo">
         <Form.Label>Correo electrónico</Form.Label>
         <Form.Control
@@ -32,9 +38,13 @@ return (
             placeholder="Ingresa tu correo"
             maxLength={100}
             required
-            value={correo} // 4. Conectamos el estado al input
-            onChange={(e) => setCorreo(e.target.value)} // 5. Actualizamos el estado al escribir
+            value={correo}
+            onChange={(e) => setCorreo(e.target.value)}
         />
+        <Form.Control.Feedback type="invalid">
+            Por favor, ingresa un correo válido.
+        </Form.Control.Feedback>
+
         </Form.Group>
         <Form.Group className="mb-3" controlId="login-pass">
         <Form.Label>Contraseña</Form.Label>
@@ -44,11 +54,14 @@ return (
             minLength={4}
             maxLength={10}
             required
-            value={password} // 4. Conectamos el estado al input
-            onChange={(e) => setPassword(e.target.value)} // 5. Actualizamos el estado al escribir
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
         />
+        <Form.Control.Feedback type="invalid">
+            Por favor, ingresa tu contraseña.
+        </Form.Control.Feedback>
+
         </Form.Group>
-        
             <Button type="submit" variant="primary">
             Ingresar
             </Button>

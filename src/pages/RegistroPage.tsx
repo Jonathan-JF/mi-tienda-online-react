@@ -1,28 +1,53 @@
 // src/pages/RegistroPage.tsx
 import { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export const RegistroPage = () => {
 const [nombre, setNombre] = useState('');
 const [correo, setCorreo] = useState('');
 const [password, setPassword] = useState('');
 
-  // 2. Función de envío
-const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+const [validated, setValidated] = useState(false);
+const [emailError, setEmailError] = useState('');
 
-    // 3. Simulación de tu lógica de scripts.js
-    console.log('Registrando usuario:', { nombre, correo, password });
-    alert('Registro exitoso (simulado). Ahora puedes iniciar sesión.');
-    // Aquí, en el futuro, guardaríamos en LocalStorage y redirigiríamos a /login
+const { register } = useAuth();
+const navigate = useNavigate();
+
+const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const form = event.currentTarget;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Lógica del correo
+    const allowedDomains = ['@duoc.cl', '@profesor.duoc.cl', '@gmail.com'];
+    let isEmailValid = allowedDomains.some(domain => correo.endsWith(domain));
+
+    if (!isEmailValid) {
+    setEmailError('Correo no permitido. Solo se aceptan @duoc.cl, @profesor.duoc.cl o @gmail.com');
+    } else {
+    setEmailError('');
+    }
+
+    if (form.checkValidity() === false || !isEmailValid) {
+      setValidated(true); // Esto activa los mensajes de error
+    return;
+    }
+
+    // Si todo es válido:
+    setValidated(true);
+    const success = register(nombre, correo, password);
+    if (success) {
+    navigate('/login');
+    }
 };
 
 return (
-    // Usamos el HTML de registro.html como base
     <div className="container-gray p-4" style={{ maxWidth: '500px', margin: 'auto' }}>
     <h1 className="mb-4">Crear cuenta</h1>
-    <Form onSubmit={handleSubmit}>
+    <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="reg-nombre">
         <Form.Label>Nombre completo</Form.Label>
         <Form.Control
@@ -33,6 +58,9 @@ return (
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
         />
+        <Form.Control.Feedback type="invalid">
+            Por favor, ingresa tu nombre.
+        </Form.Control.Feedback>
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="reg-correo">
@@ -44,10 +72,11 @@ return (
             required
             value={correo}
             onChange={(e) => setCorreo(e.target.value)}
+            isInvalid={!!emailError}
         />
-        <Form.Text className="text-muted">
-            Solo se permiten correos @duoc.cl, @profesor.duoc.cl y @gmail.com
-        </Form.Text>
+        <Form.Control.Feedback type="invalid">
+            {emailError || 'Por favor, ingresa un correo válido.'}
+        </Form.Control.Feedback>
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="reg-pass">
@@ -61,13 +90,17 @@ return (
             value={password}
             onChange={(e) => setPassword(e.target.value)}
         />
+        <Form.Control.Feedback type="invalid">
+            Por favor, ingresa una contraseña (mín. 4 caracteres).
+        </Form.Control.Feedback>
         </Form.Group>
-            <Button type="submit" variant="primary">
-            Registrarme
-            </Button>
-            <Link to="/login" className="btn btn-link">
-                Ya tengo cuenta
-            </Link>
+        
+        <Button type="submit" variant="primary" className="me-2">
+        Registrarme
+        </Button>
+        <Link to="/login" className="btn btn-link">
+        Ya tengo cuenta
+        </Link>
     </Form>
     </div>
 );

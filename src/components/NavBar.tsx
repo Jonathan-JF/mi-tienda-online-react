@@ -1,10 +1,19 @@
 // src/pages/sharedComponents/NavBar.tsx
-import { Navbar, Nav, Container } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Navbar, Nav, Container,NavDropdown } from 'react-bootstrap';
+import { Link,useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 export const NavBar = () => {
   const { totalItems } = useCart();
+  const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <Navbar expand="lg" bg="dark" variant="dark" className="border-bottom border-secondary">
       <Container fluid>
@@ -31,9 +40,16 @@ export const NavBar = () => {
               Carrito 🛒<span className={`badge bg-danger ${totalItems > 0 ? '' : 'd-none'}`}>
               {totalItems}</span>
             </Nav.Link>
-            <Nav.Link as={Link} to="/login" className="text-white">
-              Login
-            </Nav.Link>
+            {currentUser ? (
+              <NavDropdown title={`Hola, ${currentUser.nombre}`} id="user-dropdown" menuVariant="dark">
+              <NavDropdown.Item as={Link} to="/perfil">Mi Perfil</NavDropdown.Item>
+              <NavDropdown.Item onClick={handleLogout}>
+                Cerrar Sesión
+              </NavDropdown.Item>
+              </NavDropdown> ) : (
+              <Nav.Link as={Link} to="/login" className="text-white">
+                Login
+              </Nav.Link>)}
           </Nav>
         </Navbar.Collapse>
       </Container>
