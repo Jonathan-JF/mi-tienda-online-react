@@ -1,11 +1,14 @@
 // src/components/ProductoCard.tsx
 import { Link } from 'react-router-dom';
 import type { Producto } from '../interfaces/producto.interface';
+import { useCart } from '../context/CartContext';
 // Definimos que este componente recibe "props"
 interface Props {
 producto: Producto;
 }
 export const ProductoCard = ({ producto }: Props) => {
+    const { addProduct } = useCart();
+
 return (
     // Esta es la tarjeta de tu HTML original
     <div className="col-md-3 mb-4">
@@ -15,12 +18,12 @@ return (
         <h5 className="card-title">{producto.nombre}</h5>
         <p className="fw-bold">${producto.precio.toLocaleString('es-CL')}</p>
         <div className="mt-auto">
-            {/* Usamos Link para ir al detalle. (¡Lo crearemos después!) */}
             <Link to={`/producto/${producto.id}`} className="btn btn-outline-primary">
             Ver detalle
             </Link>
-            {/* Este botón lo conectaremos al carrito más adelante */}
-            <button className="btn btn-primary mt-2">
+            <button className="btn btn-primary mt-2"
+            onClick={() => addProduct(producto)}
+            >
             Añadir
             </button>
         </div>
