@@ -1,68 +1,67 @@
-# React + TypeScript + Vite
+# Mi Tienda Online (React + TypeScript + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este repositorio contiene una tienda online de ejemplo creada con React, TypeScript y Vite. Está pensada como una base para aprender y desarrollar una SPA (Single Page Application) con rutas, contextos (Auth y Cart), componentes reutilizables y una pequeña suite de tests.
 
-Currently, two official plugins are available:
+## Contenido principal
 
+- `src/` : código fuente de la aplicación (componentes, páginas, context, helpers, datos de ejemplo).
+- `public/` : assets públicos (imágenes, favicon, etc.).
 
-## Expanding the ESLint configuration
+## Características implementadas
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Rutas con `react-router-dom`.
+- `AuthContext` y `CartContext` para manejar sesión y carrito.
+- Componentes: `NavBar`, `Header`, `Footer`, `ProductoCard`, layouts y páginas.
+- Helpers y datos de ejemplo en `src/helpers` y `src/data`.
+- Suite de pruebas con `vitest` y `@testing-library/react`
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Instalación y uso
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+1. Instalar dependencias:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```cmd
+cd c:\Workspace\mi-tienda-online-react
+npm install --legacy-peer-deps
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Ejecutar en modo desarrollo (Vite):
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```cmd
+npm run dev
+```
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
+3. Construir para producción:
+
+```cmd
+npm run build
+```
+
+## Pruebas (unitarias y UI)
+
+- Ejecutar tests (modo no interactivo):
+
+```cmd
+npx vitest run
+```
+
+- Abrir la interfaz visual de Vitest (UI) — muestra tests en tiempo real y permite re-ejecutarlos rápidamente:
+
+```cmd
+npm run test:ui
+# Abrir la URL que muestre la terminal (ej. http://localhost:51204/__vitest__/)
+```
+
+- Generar cobertura:
+
+```cmd
+npm run test:coverage
+```
+
+## Notas sobre las pruebas
+
+- Las pruebas incluidas cubren helpers, contextos y componentes principales.
+
+
 ])
 ```
 # Este repositorio incluye un README en español: `README-ES.md`
