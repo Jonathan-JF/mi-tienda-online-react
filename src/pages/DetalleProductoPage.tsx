@@ -15,9 +15,12 @@ useEffect(() => {
     if (id) {
     const numericId = parseInt(id, 10);
     if (!isNaN(numericId)) {
-        // 4. Llamamos a nuestra "action" para buscar el producto
-        const foundProduct = getProductById(numericId);
-        setProducto(foundProduct || null); // Guardamos el producto o null si no se encontró
+        // 4. Llamamos a nuestra "action" asíncrona para buscar el producto
+        const fetchProduct = async () => {
+          const foundProduct = await getProductById(numericId);
+          setProducto(foundProduct || null);
+        };
+        fetchProduct();
     }
     }
   }, [id]); // Se vuelve a ejecutar si el ID de la URL cambia

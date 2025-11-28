@@ -9,9 +9,12 @@ export const HomePage = () => {
 const [destacados, setDestacados] = useState<Producto[]>([]);
   // 2. useEffect para cargar los datos
 useEffect(() => {
-    // 3. Llamamos a la action de "destacados"
-    const data = getFeaturedProducts();
-    setDestacados(data); // 4. Guardamos en el estado
+    // 3. Llamamos a la action de "destacados" (async)
+    const fetchDestacados = async () => {
+      const data = await getFeaturedProducts();
+      setDestacados(data);
+    };
+    fetchDestacados();
 }, []);
 
 return (

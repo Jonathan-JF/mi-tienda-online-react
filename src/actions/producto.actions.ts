@@ -1,21 +1,28 @@
-// src/actions/producto.actions.ts
-import { productos } from "../data/productos.data";
+// Apuntamos al Gateway (Puerto 8080)
+const API_URL = "http://localhost:8080/api/productos";
 import type { Producto } from "../interfaces/producto.interface";
 
-// Función para obtener TODOS los productos
-export const getProducts = (): Producto[] => {
-return productos;
+export const getProducts = async (): Promise<Producto[]> => {
+  try {
+    const response = await fetch(API_URL);
+    if (!response.ok) {
+        throw new Error("Error al cargar productos");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error conectando al backend:", error);
+    return [];
+  }
 }
 
-// Función para obtener productos por ID (para la página de detalle)
-export const getProductById = (id: number): Producto | undefined => {
-  // Usamos .find() para buscar el producto por su id
-return productos.find(producto => producto.id === id);
+export const getProductById = async (id: number): Promise<Producto | undefined> => {
+    // Reutilizamos getProducts o creamos un endpoint específico en el backend
+    const productos = await getProducts();
+    return productos.find(p => p.id === Number(id)); // Asegurar que sea número
 }
 
-// Función para obtener productos DESTACADOS (para el Home)
-//
-export const getFeaturedProducts = (): Producto[] => {
-  // Usamos .filter() para obtener solo los destacados
-return productos.filter(producto => producto.destacado);
+export const getFeaturedProducts = async (): Promise<Producto[]> => {
+    const productos = await getProducts();
+    return productos.filter(p => p.destacado);
 }

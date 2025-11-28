@@ -9,9 +9,12 @@ export const ProductosPage = () => {
   const [productos, setProductos] = useState<Producto[]>([]);
   // 2. Usamos useEffect para cargar los datos UNA SOLA VEZ
   useEffect(() => {
-    // 3. Llamamos a nuestra "action" simulada
-    const data = getProducts();
-    setProductos(data); // 4. Guardamos los productos en el estado
+    // 3. Llamamos a nuestra "action" asíncrona
+    const fetchProducts = async () => {
+      const data = await getProducts();
+      setProductos(data);
+    };
+    fetchProducts();
   }, []); // El [] vacío significa "ejecutar solo cuando el componente carga"
   return (
     <>
