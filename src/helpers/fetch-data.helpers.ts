@@ -1,10 +1,10 @@
-import { getRobots } from "../actions";
+import { getProducts } from "../actions";
 
 export async function fetchData() {
   try {
-    const data = await getRobots();
-    const robots = data.robots;
-    return robots;
+    // En este proyecto usamos `getProducts` para obtener los productos locales
+    const products = await Promise.resolve(getProducts());
+    return products;
   } catch(error) {
     console.log(`Error en fetching data: ${error}`);
     return {};
