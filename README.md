@@ -60,10 +60,3 @@ npm run test:coverage
 ## Notas sobre las pruebas
 
 - Las pruebas incluidas cubren helpers, contextos y componentes principales.
-
-
-])
-```
-# Este repositorio incluye un README en español: `README-ES.md`
-
-# Original
