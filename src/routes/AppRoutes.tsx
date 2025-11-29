@@ -10,6 +10,7 @@ import { RegistroPage } from "../pages/RegistroPage";
 import { NosotrosPage } from "../pages/NosotrosPage";
 import { BlogsPage } from "../pages/BlogsPage";
 import { ContactoPage } from "../pages/ContactoPage";
+import { PerfilPage } from "../pages/PerfilPage"; // Importar nueva página de perfil
 
 export const AppRoutes = () => {
     const routes = useRoutes([
@@ -26,6 +27,7 @@ export const AppRoutes = () => {
             {path: '/nosotros',element: <NosotrosPage />},
             {path: '/blogs',element: <BlogsPage />},
             {path: '/contacto',element: <ContactoPage />},
+            {path: '/perfil',element: <PerfilPage />}, // Añadir la nueva ruta de perfil
             {path: '/blogs/:id',element: <div>Detalle del blog (próximamente)</div>},
             ]
         },

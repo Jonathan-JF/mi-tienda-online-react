@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      // Redirige /api a tu backend en desarrollo para evitar CORS
+      // FIX: Aseguramos que la redirección sea directa a la URL base del Gateway
       '/api': {
         target: 'http://localhost:8080',
         changeOrigin: true,

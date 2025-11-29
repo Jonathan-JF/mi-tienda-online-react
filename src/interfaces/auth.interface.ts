@@ -11,9 +11,9 @@ export interface RegisterData {
 
 export interface User {
     id: string;
-    fullName: string;
+    fullName: string; // Nombre completo (coincide con el backend)
     email: string;
-    role: string;
+    role: string;   // Rol del usuario (ADMIN/CLIENTE)
 }
 
 export interface AuthResponse {

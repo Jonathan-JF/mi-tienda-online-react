@@ -1,6 +1,6 @@
 // src/pages/RegistroPage.tsx
 import { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -11,16 +11,19 @@ const [password, setPassword] = useState('');
 
 const [validated, setValidated] = useState(false);
 const [emailError, setEmailError] = useState('');
+const [errorBackend, setErrorBackend] = useState<string | null>(null); // Nuevo estado para errores de backend
+const [loading, setLoading] = useState(false);
 
 const { register } = useAuth();
 const navigate = useNavigate();
 
-const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
 
     event.preventDefault();
     event.stopPropagation();
-
+    setErrorBackend(null);
+    
     // Lógica del correo
     const allowedDomains = ['@duoc.cl', '@profesor.duoc.cl', '@gmail.com'];
     let isEmailValid = allowedDomains.some(domain => correo.endsWith(domain));
@@ -38,15 +41,34 @@ const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 
     // Si todo es válido:
     setValidated(true);
-    const success = register(nombre, correo, password);
+    setLoading(true);
+
+    // Llamamos a la función de registro ASÍNCRONA del contexto
+    const success = await register(nombre, correo, password); 
+    
+    setLoading(false);
+    
     if (success) {
-    navigate('/login');
+        // Redirigir si el registro fue exitoso
+        navigate('/login');
+    } else {
+        // Si no fue exitoso, el error ya fue mostrado por el alert en AuthContext.
+        // Pero lo colocamos también aquí para tener un manejo de error más robusto
+        setErrorBackend('Error en el registro. Intente con otro correo.'); 
     }
 };
 
 return (
     <div className="container-gray p-4" style={{ maxWidth: '500px', margin: 'auto' }}>
     <h1 className="mb-4">Crear cuenta</h1>
+    
+      {/* Alerta de Error del Backend */}
+      {errorBackend && (
+        <Alert variant="danger" onClose={() => setErrorBackend(null)} dismissible>
+          {errorBackend}
+        </Alert>
+      )}
+
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="reg-nombre">
         <Form.Label>Nombre completo</Form.Label>
@@ -95,8 +117,8 @@ return (
         </Form.Control.Feedback>
         </Form.Group>
         
-        <Button type="submit" variant="primary" className="me-2">
-        Registrarme
+        <Button type="submit" variant="primary" className="me-2" disabled={loading}>
+        {loading ? 'Registrando...' : 'Registrarme'}
         </Button>
         <Link to="/login" className="btn btn-link">
         Ya tengo cuenta
