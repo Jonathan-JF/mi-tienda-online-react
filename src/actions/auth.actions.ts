@@ -1,7 +1,7 @@
 import { type AuthResponse, type LoginData, type RegisterData, type User } from "../interfaces/auth.interface";
 
 // FIX: Usamos la ruta relativa base del API para que Vite use su proxy
-const API_BASE_URL = '/api';
+const API_BASE_URL = 'VITE_API_URL=https://www.google.com/search?q=https://mi-gateway-tienda.onrender.com/api';
 
 // 2. Función de LOGIN
 export const loginAction = async (data: LoginData): Promise<AuthResponse> => {
