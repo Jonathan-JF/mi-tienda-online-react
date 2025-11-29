@@ -1,7 +1,24 @@
-// src/interfaces/auth.interface.ts
-// (Tu 'scripts.js' solo guardaba correo y pass, pero añadiremos nombre)
+export interface LoginData {
+    email: string;
+    password: string;
+}
+
+export interface RegisterData {
+    fullName: string;
+    email: string;
+    password: string;
+}
+
 export interface User {
-nombre: string;
-correo: string;
-password?: string;
+    id: string;
+    fullName: string;
+    email: string;
+    role: string;
+}
+
+export interface AuthResponse {
+    ok: boolean;
+    user?: User;
+    token?: string;
+    mensaje?: string;
 }
