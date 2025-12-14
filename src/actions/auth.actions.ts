@@ -1,12 +1,14 @@
 import { type AuthResponse, type LoginData, type RegisterData, type User } from "../interfaces/auth.interface";
 
-// FIX: Usamos la ruta relativa base del API para que Vite use su proxy
-const API_BASE_URL = 'VITE_API_URL=https://www.google.com/search?q=https://mi-gateway-tienda.onrender.com/api';
+// FIX: Usamos la ruta relativa "/api" para que Vite use su proxy configurado en vite.config.ts
+// El proxy redirige "/api" -> "http://localhost:8080/api" (Gateway)
+const API_BASE_URL = '/api';
 
 // 2. Función de LOGIN
 export const loginAction = async (data: LoginData): Promise<AuthResponse> => {
     try {
-        // Usamos la ruta relativa: /api/auth/login
+        // La ruta final será: http://localhost:5173/api/auth/login 
+        // -> Proxy -> http://localhost:8080/api/auth/login
         const response = await fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
             headers: {
@@ -54,7 +56,6 @@ export const loginAction = async (data: LoginData): Promise<AuthResponse> => {
 // 4. Función de REGISTRO
 export const registerAction = async (data: RegisterData): Promise<AuthResponse> => {
     try {
-        // Usamos la ruta relativa: /api/auth/registro
         const response = await fetch(`${API_BASE_URL}/auth/registro`, {
             method: 'POST',
             headers: {
