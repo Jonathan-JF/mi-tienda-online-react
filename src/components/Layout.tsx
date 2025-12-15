@@ -1,20 +1,25 @@
-// src/components/Layout.tsx
+import { Header } from './Header';
+import { Footer } from './Footer';
+import type { ReactNode } from 'react';
 
-import { Outlet } from "react-router-dom"; // Outlet es donde se cargarán las páginas
-import { Footer } from "./Footer";
-import { Header } from "./Header";
-
-export const Layout = () => {
-return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-    <Header />
-
-    <main style={{ flex: 1 }} className="container my-5">
-        {/* Aquí es donde React "pinta" la página (HomePage, ProductosPage, etc) */}
-        <Outlet />
-    </main>
-
-    <Footer />
-    </div>
-);
+// Definimos que este componente acepta 'children' (otros componentes dentro)
+interface LayoutProps {
+    children: ReactNode;
 }
+
+export const Layout = ({ children }: LayoutProps) => {
+    return (
+        <div className="d-flex flex-column min-vh-100">
+            {/* Header siempre visible arriba */}
+            <Header />
+            
+            {/* El contenido variable (las rutas) va aquí */}
+            <main className="flex-grow-1">
+                {children}
+            </main>
+
+            {/* Footer siempre visible abajo */}
+            <Footer />
+        </div>
+    );
+};
