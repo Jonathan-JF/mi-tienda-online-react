@@ -2,35 +2,29 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react'; // Importamos waitFor
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
-import { AuthProvider, useAuth } from './AuthContext';
 
-// 1. Mockeamos completamente las acciones de autenticación para simular el backend
-// Esto evita el "Failed to fetch" y simula las respuestas asíncronas.
-const mockUser = {
-  id: '1',
-  fullName: 'Juan Pérez',
-  email: 'j@d.com',
-  role: 'CLIENTE',
-};
+// Mockeamos el módulo de acciones ANTES de importar el contexto.
+// El factory no debe depender de variables externas (evita hoisting issues).
+vi.mock('../actions/auth.actions', () => ({
+  loginAction: vi.fn().mockResolvedValue({
+    ok: true,
+    user: { id: '1', fullName: 'Juan Pérez', email: 'j@d.com', role: 'CLIENTE' },
+    token: 'test-token-123'
+  }),
+  registerAction: vi.fn().mockResolvedValue({
+    ok: true,
+    user: { id: '1', fullName: 'Juan Pérez', email: 'j@d.com', role: 'CLIENTE' },
+    mensaje: 'Registro exitoso'
+  })
+}));
+
+import * as authActions from '../actions/auth.actions';
+
+// Valores reutilizables para las pruebas
+const mockUser = { id: '1', fullName: 'Juan Pérez', email: 'j@d.com', role: 'CLIENTE' };
 const mockToken = 'test-token-123';
 
-const mockLoginAction = vi.fn().mockResolvedValue({
-  ok: true,
-  user: mockUser,
-  token: mockToken,
-});
-
-const mockRegisterAction = vi.fn().mockResolvedValue({
-  ok: true,
-  user: mockUser,
-  mensaje: 'Registro exitoso',
-});
-
-// Importante: mockear el módulo que contiene las acciones
-vi.mock('../actions/auth.actions', () => ({
-  loginAction: mockLoginAction,
-  registerAction: mockRegisterAction,
-}));
+import { AuthProvider, useAuth } from './AuthContext';
 
 
 // Componente auxiliar para exponer el hook dentro del provider
@@ -44,9 +38,9 @@ const Consumer = () => {
       <div>usuario: {currentUser ? currentUser.fullName : 'null'}</div>
       {/* Las funciones register y login ahora esperan la estructura de datos del backend */}
       <button onClick={() => register('Juan Pérez','j@d.com','123')}>registrar</button>
-      {/* En el test de login, simulamos la llamada asíncrona */}
+      {/* En el test de login, simulamos la llamada asíncrona usando el mock importado */}
       <button onClick={async () => {
-        const result = await mockLoginAction({ email: 'j@d.com', password: '123' } as any);
+        const result = await authActions.loginAction({ email: 'j@d.com', password: '123' } as any);
         if (result.ok && result.user) {
           login(result.user, result.token);
         }
@@ -62,7 +56,11 @@ describe('AuthContext', () => {
   const TOKEN_KEY = 'auth_token';
 
   beforeEach(() => {
-    localStorage.clear();
+    if (typeof localStorage.clear === 'function') {
+      localStorage.clear();
+    } else {
+      Object.keys(localStorage).forEach(k => localStorage.removeItem(k));
+    }
     vi.clearAllMocks();
   });
 
@@ -80,7 +78,7 @@ describe('AuthContext', () => {
     await user.click(regBtn);
     
     // Verificamos que la acción de backend simulada fue llamada con los datos
-    expect(mockRegisterAction).toHaveBeenCalledWith({
+    expect((authActions.registerAction as any)).toHaveBeenCalledWith({
       fullName: 'Juan Pérez',
       email: 'j@d.com',
       password: '123',
@@ -137,7 +135,3 @@ describe('AuthContext', () => {
     expect(screen.getByText(/usuario: null/)).toBeInTheDocument();
   });
 });
-
-function beforeEach(arg0: () => void) {
-  throw new Error('Function not implemented.');
-}

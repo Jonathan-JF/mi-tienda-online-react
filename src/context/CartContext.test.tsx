@@ -21,7 +21,11 @@ const producto = { id: 1, nombre: 'Zapato', precio: 10000 };
 
 describe('CartContext', () => {
   beforeEach(() => {
-    localStorage.clear();
+    if (typeof localStorage.clear === 'function') {
+      localStorage.clear();
+    } else {
+      Object.keys(localStorage).forEach(k => localStorage.removeItem(k));
+    }
     vi.clearAllMocks();
   });
 
